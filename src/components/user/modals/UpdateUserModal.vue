@@ -1,5 +1,5 @@
 <template>
-    <v-dialog v-model="isVisible" max-width="600px">
+    <v-dialog v-model="isUpdateVisible" max-width="600px">
       <v-card>
         <v-card-title class="headline grey lighten-2">
           Atualizar Usuário
@@ -64,16 +64,16 @@
     },
     data() {
       return {
-        isVisible: this.value,
+        isUpdateVisible: this.value,
         selectedUser: { ...this.user },
         valid: false,
       };
     },
     watch: {
       value(val) {
-        this.isVisible = val;
+        this.isUpdateVisible = val;
       },
-      isVisible(val) {
+      isUpdateVisible(val) {
         this.$emit('input', val);
       },
       user(sentUser) {
@@ -84,14 +84,13 @@
     },
     methods: {
       close() {
-        this.isVisible = false;
-        this.resetForm();
+        this.isUpdateVisible = false;
+        // this.resetForm();
 
       },
       async save() {
         try {
             const res = await axios.put('/users/'+this.selectedUser.id, this.selectedUser);
-            console.log(res)
             showSuccessAlert(res.data.message);
         } catch (error) {
             showErrorAlert(error.response.data.message)

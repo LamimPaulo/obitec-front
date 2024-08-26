@@ -1,41 +1,42 @@
 <template>
-  <v-data-table
-    :headers="headers"
-    :items="users"
-    item-key="id"
-    class="elevation-1"
-  >
-    <template v-slot:top>
-      <v-toolbar flat>
-        <v-toolbar-title>Usuários</v-toolbar-title>
-      </v-toolbar>
-    </template>
-    <template v-slot:[`item.actions`]="{ item }">
-      <v-btn icon @click="showEditUserModal(item)">
-        <v-icon>mdi-pencil</v-icon>
-      </v-btn>
-      <v-btn icon @click="showDeleteUserModal(item)">
-        <v-icon>mdi-delete</v-icon>
-      </v-btn>
+  <v-container>
+    <UpdateUserModal
+    v-model="isEditUserModalOpen"
+    :user="selectedUser"
+    @user-updated="fetchUsers"
+  />
 
-
-      <UpdateUserModal
-      v-model="isEditUserModalOpen"
-      :user="selectedUser"
-      @user-updated="fetchUsers"
-    />
-
-    <DeleteUserModal
-      v-model="isDeleteUserModalOpen"
-      :user="selectedUser"
-      @user-updated="fetchUsers"
-    />
-    </template>
-  </v-data-table>
+  <DeleteUserModal
+    v-model="isDeleteUserModalOpen"
+    :user="selectedUser"
+    @user-updated="fetchUsers"
+  />
+    <v-data-table
+      :headers="headers"
+      :items="users"
+      item-key="id"
+      class="elevation-1"
+    >
+    
+      <template v-slot:top>
+        <v-toolbar flat>
+          <v-toolbar-title>Usuários</v-toolbar-title>
+        </v-toolbar>
+      </template>
+      <template v-slot:[`item.actions`]="{ item }">
+        <v-btn icon @click="showEditUserModal(item)">
+          <v-icon>mdi-pencil</v-icon>
+        </v-btn>
+        <v-btn icon @click="showDeleteUserModal(item)">
+          <v-icon>mdi-delete</v-icon>
+        </v-btn>
+      </template>
+    </v-data-table>
+  </v-container>
 </template>
 
 <script>
-  import axios from 'axios';
+import axios from 'axios';
 import UpdateUserModal from './modals/UpdateUserModal.vue';
 import DeleteUserModal from './modals/DeleteUserModal.vue';
   
@@ -60,11 +61,12 @@ import DeleteUserModal from './modals/DeleteUserModal.vue';
       };
     },
     methods: {
-      showEditUserModal(selectedUser){
-        this.selectedUser = selectedUser;
+      showEditUserModal(user){
+        this.selectedUser = user;
         this.isEditUserModalOpen = true;
       },
-      showDeleteUserModal(){
+      showDeleteUserModal(user){
+        this.selectedUser = user;
         this.isDeleteUserModalOpen = true;
       },
       async fetchUsers() {
